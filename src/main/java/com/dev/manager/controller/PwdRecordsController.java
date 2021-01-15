@@ -7,7 +7,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +22,7 @@ import com.dev.manager.util.LoggingParams;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("*")
 public class PwdRecordsController {
 
 	@Autowired
@@ -28,11 +31,12 @@ public class PwdRecordsController {
 	private static final Logger logger = LogManager.getLogger(PwdRecordsController.class);
 
 	@PostMapping(value = "/add-record")
-	public ResponseEntity<?> addEntry(Input input) {
+	public ResponseEntity<?> addEntry(@RequestBody Input input) {
 
 		String requestType = AppConstants.ADD_RECORD;
 		LoggingParams logParams = new LoggingParams(input.getUserName(), requestType, "Request Landed on Controller");
 		logger.info(LoggerMsgSequence.getMsg(logParams));
+
 		try {
 			String resp = service.addRecord(input, requestType);
 			return new ResponseEntity<>(resp, HttpStatus.OK);
@@ -43,9 +47,12 @@ public class PwdRecordsController {
 	}
 
 	@PostMapping(value = "/fetch-records")
-	public ResponseEntity<?> fetchEntries(Input input) {
+	public ResponseEntity<?> fetchEntries(@RequestBody Input input) {
 		String requestType = AppConstants.FETCH_RECORDS;
 		LoggingParams logParams = new LoggingParams(input.getUserName(), requestType, "Request Landed on Controller");
+		logger.info(LoggerMsgSequence.getMsg(logParams));
+
+		logParams.setMsg(input.getUserName());
 		logger.info(LoggerMsgSequence.getMsg(logParams));
 		try {
 			List<PwdEntries> resp = service.fetchRecords(input, requestType);
