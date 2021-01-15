@@ -29,7 +29,7 @@ public class UserController {
 	private static final Logger logger = LogManager.getLogger(UserController.class);
 
 	@PostMapping(value = "/register")
-	public ResponseEntity<?> login(@RequestBody UserMaster input) {
+	public ResponseEntity<?> register(@RequestBody UserMaster input) {
 		String requestType = AppConstants.ADD_USER;
 		LoggingParams logParams = new LoggingParams(input.getUserName(), requestType, "Request Landed on Controller");
 		logger.info(LoggerMsgSequence.getMsg(logParams));
