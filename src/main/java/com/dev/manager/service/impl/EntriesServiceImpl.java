@@ -13,7 +13,6 @@ import com.dev.manager.entity.PwdEntries;
 import com.dev.manager.entity.UserMaster;
 import com.dev.manager.model.Input;
 import com.dev.manager.service.EntriesService;
-import com.dev.manager.util.AppConstants;
 import com.dev.manager.util.EncryptionUtil;
 import com.dev.manager.util.LoggerMsgSequence;
 import com.dev.manager.util.LoggingParams;
@@ -30,13 +29,12 @@ public class EntriesServiceImpl implements EntriesService {
 	private static final Logger logger = LogManager.getLogger(EntriesServiceImpl.class);
 
 	@Override
-	public String addRecord(Input input) {
-		LoggingParams logParams = new LoggingParams(input.getUserName(), AppConstants.ADD_RECORD,
-				"Performing Operations");
+	public String addRecord(Input input, String requestType) {
+		LoggingParams logParams = new LoggingParams(input.getUserName(), requestType, "Performing Operations");
 
 		logger.info(LoggerMsgSequence.getMsg(logParams));
 
-		UserMaster master = dao.fetchUser(input.getUserName());
+		UserMaster master = dao.fetchUser(input.getUserName(), requestType);
 
 		if (null != master) {
 
@@ -47,23 +45,36 @@ public class EntriesServiceImpl implements EntriesService {
 			entry.setSiteName(encryptor.encrypt(input.getSiteName()));
 			entry.setSitePwd(encryptor.encrypt(input.getSitePwd()));
 
-			return dao.addEntry(entry);
+			PwdEntries dbEntry = dao.fetchEntry(entry, requestType);
+
+			if (dbEntry != null) {
+				logParams.setMsg("Record is present in DB, updating record");
+				logger.info(LoggerMsgSequence.getMsg(logParams));
+
+				entry.setPwdId(dbEntry.getPwdId());
+				return dao.addEntry(entry, requestType);
+			} else {
+
+				logParams.setMsg("Record is not present in DB, adding record");
+				logger.info(LoggerMsgSequence.getMsg(logParams));
+				return dao.addEntry(entry, requestType);
+			}
+
 		}
 
 		return "Failed";
 	}
 
 	@Override
-	public List<PwdEntries> fetchRecords(Input input) {
-		LoggingParams logParams = new LoggingParams(input.getUserName(), AppConstants.FETCH_RECORDS,
-				"Performing Operations");
+	public List<PwdEntries> fetchRecords(Input input, String requestType) {
+		LoggingParams logParams = new LoggingParams(input.getUserName(), requestType, "Performing Operations");
 		logger.info(LoggerMsgSequence.getMsg(logParams));
 
-		UserMaster master = dao.fetchUser(input.getUserName());
+		UserMaster master = dao.fetchUser(input.getUserName(), requestType);
 
 		if (null != master) {
 
-			List<PwdEntries> dbEntries = dao.fetchEntries(master);
+			List<PwdEntries> dbEntries = dao.fetchEntries(master, requestType);
 
 			List<PwdEntries> entries = new ArrayList<PwdEntries>();
 

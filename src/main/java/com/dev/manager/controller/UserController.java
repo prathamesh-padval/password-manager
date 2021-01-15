@@ -28,14 +28,12 @@ public class UserController {
 
 	@PostMapping(value = "/register")
 	public ResponseEntity<?> login(@RequestBody UserMaster input) {
-		LoggingParams logParams = new LoggingParams(input.getUserName(), AppConstants.ADD_USER,
-				"Request Landed on Controller");
+		String requestType = AppConstants.ADD_USER;
+		LoggingParams logParams = new LoggingParams(input.getUserName(), requestType, "Request Landed on Controller");
 		logger.info(LoggerMsgSequence.getMsg(logParams));
 
 		try {
-
-			String resp = userService.register(input);
-			System.out.println(resp);
+			String resp = userService.register(input, requestType);
 			return new ResponseEntity<>(resp, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(LoggerMsgSequence.getMsg(logParams), e);
@@ -45,14 +43,14 @@ public class UserController {
 
 	@PostMapping(value = "/login")
 	public ResponseEntity<?> login(@RequestBody Input input) {
-		LoggingParams logParams = new LoggingParams(input.getUserName(), AppConstants.ADD_USER,
-				"Request Landed on Controller");
+
+		String requestType = AppConstants.VALIDATE_CREDS;
+
+		LoggingParams logParams = new LoggingParams(input.getUserName(), requestType, "Request Landed on Controller");
 		logger.info(LoggerMsgSequence.getMsg(logParams));
 
 		try {
-
-			boolean resp = userService.validateCreds(input);
-			System.out.println(resp);
+			boolean resp = userService.validateCreds(input, requestType);
 			return new ResponseEntity<>(resp, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(LoggerMsgSequence.getMsg(logParams), e);

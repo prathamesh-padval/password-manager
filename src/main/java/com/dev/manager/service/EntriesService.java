@@ -7,7 +7,7 @@ import com.dev.manager.model.Input;
 
 public interface EntriesService {
 
-	String addRecord(Input input);
+	String addRecord(Input input, String requestType);
 
-	List<PwdEntries> fetchRecords(Input input);
+	List<PwdEntries> fetchRecords(Input input, String requestType);
 }

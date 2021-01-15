@@ -29,12 +29,12 @@ public class PwdRecordsController {
 
 	@PostMapping(value = "/add-record")
 	public ResponseEntity<?> addEntry(Input input) {
-		LoggingParams logParams = new LoggingParams(input.getUserName(), AppConstants.ADD_RECORD,
-				"Request Landed on Controller");
+
+		String requestType = AppConstants.ADD_RECORD;
+		LoggingParams logParams = new LoggingParams(input.getUserName(), requestType, "Request Landed on Controller");
 		logger.info(LoggerMsgSequence.getMsg(logParams));
 		try {
-			String resp = service.addRecord(input);
-			System.out.println(resp);
+			String resp = service.addRecord(input, requestType);
 			return new ResponseEntity<>(resp, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(LoggerMsgSequence.getMsg(logParams), e);
@@ -44,12 +44,17 @@ public class PwdRecordsController {
 
 	@PostMapping(value = "/fetch-records")
 	public ResponseEntity<?> fetchEntries(Input input) {
-		LoggingParams logParams = new LoggingParams(input.getUserName(), AppConstants.FETCH_RECORDS,
-				"Request Landed on Controller");
+		String requestType = AppConstants.FETCH_RECORDS;
+		LoggingParams logParams = new LoggingParams(input.getUserName(), requestType, "Request Landed on Controller");
 		logger.info(LoggerMsgSequence.getMsg(logParams));
 		try {
-			List<PwdEntries> resp = service.fetchRecords(input);
-			System.out.println(resp);
+			List<PwdEntries> resp = service.fetchRecords(input, requestType);
+
+			if (resp != null) {
+				logParams.setMsg("Returning records");
+				logger.info(LoggerMsgSequence.getMsg(logParams));
+			}
+
 			return new ResponseEntity<>(resp, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(LoggerMsgSequence.getMsg(logParams), e);

@@ -31,21 +31,20 @@ public class PwdDao {
 
 	private static final Logger logger = LogManager.getLogger(PwdDao.class);
 
-	public UserMaster validate(Input input) {
-		LoggingParams params = new LoggingParams(input.getUserName(), AppConstants.VALIDATE_CREDS,
-				"Validating Credentials");
+	public UserMaster validate(Input input, String requestType) {
+		LoggingParams params = new LoggingParams(input.getUserName(), requestType, "Validating Credentials");
 		logger.info(LoggerMsgSequence.getMsg(params));
 		return userRepo.validate(input.getUserName(), encryptor.encrypt(input.getPassword()));
 	}
 
-	public UserMaster fetchUser(String userName) {
-		LoggingParams params = new LoggingParams(userName, AppConstants.FETCH_USER, "Fetching user based on userName");
+	public UserMaster fetchUser(String userName, String requestType) {
+		LoggingParams params = new LoggingParams(userName, requestType, "Fetching user based on userName");
 		logger.info(LoggerMsgSequence.getMsg(params));
 		return userRepo.findByUserName(userName);
 	}
 
-	public String addEntry(PwdEntries entry) {
-		LoggingParams params = new LoggingParams(entry.getUser().getUserName(), AppConstants.ADD_RECORD, "");
+	public String addEntry(PwdEntries entry, String requestType) {
+		LoggingParams params = new LoggingParams(entry.getUser().getUserName(), requestType, "");
 		try {
 			params.setMsg("Making insert call in DB");
 			logger.info(LoggerMsgSequence.getMsg(params));
@@ -69,14 +68,24 @@ public class PwdDao {
 
 	}
 
-	public List<PwdEntries> fetchEntries(UserMaster master) {
-		LoggingParams params = new LoggingParams(master.getUserName(), AppConstants.FETCH_RECORDS, "Finding Records");
+	public List<PwdEntries> fetchEntries(UserMaster master, String requestType) {
+		LoggingParams params = new LoggingParams(master.getUserName(), requestType, "Finding Records");
 		logger.info(LoggerMsgSequence.getMsg(params));
 		return entryRepo.findByUser(master);
 	}
 
-	public String registerUser(UserMaster input) {
-		LoggingParams params = new LoggingParams(input.getUserName(), AppConstants.ADD_USER, "Registering User");
+	public PwdEntries fetchEntry(PwdEntries entry, String requestType) {
+		LoggingParams params = new LoggingParams(entry.getUser().getUserName(), requestType, "Finding Record");
+		logger.info(LoggerMsgSequence.getMsg(params));
+
+		PwdEntries fetchedEntry = entryRepo.fetchEntry(entry.getUser(), entry.getSiteName());
+
+		return fetchedEntry != null ? fetchedEntry : null;
+
+	}
+
+	public String registerUser(UserMaster input, String requestType) {
+		LoggingParams params = new LoggingParams(input.getUserName(), requestType, "Registering User");
 		logger.info(LoggerMsgSequence.getMsg(params));
 
 		try {
