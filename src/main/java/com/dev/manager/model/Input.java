@@ -2,7 +2,7 @@ package com.dev.manager.model;
 
 public class Input {
 
-	private String username;
+	private String userName;
 
 	private String password;
 
@@ -12,8 +12,6 @@ public class Input {
 
 	private String sitePwd;
 
-	
-	
 	public String getSiteName() {
 		return siteName;
 	}
@@ -38,12 +36,12 @@ public class Input {
 		this.sitePwd = sitePwd;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getPassword() {

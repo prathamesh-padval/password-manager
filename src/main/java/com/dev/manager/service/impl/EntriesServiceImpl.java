@@ -3,6 +3,8 @@ package com.dev.manager.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,10 @@ import com.dev.manager.entity.PwdEntries;
 import com.dev.manager.entity.UserMaster;
 import com.dev.manager.model.Input;
 import com.dev.manager.service.EntriesService;
+import com.dev.manager.util.AppConstants;
 import com.dev.manager.util.EncryptionUtil;
+import com.dev.manager.util.LoggerMsgSequence;
+import com.dev.manager.util.LoggingParams;
 
 @Service
 public class EntriesServiceImpl implements EntriesService {
@@ -22,10 +27,16 @@ public class EntriesServiceImpl implements EntriesService {
 	@Autowired
 	EncryptionUtil encryptor;
 
+	private static final Logger logger = LogManager.getLogger(EntriesServiceImpl.class);
+
 	@Override
 	public String addRecord(Input input) {
+		LoggingParams logParams = new LoggingParams(input.getUserName(), AppConstants.ADD_RECORD,
+				"Performing Operations");
 
-		UserMaster master = dao.fetchUser(input.getUsername());
+		logger.info(LoggerMsgSequence.getMsg(logParams));
+
+		UserMaster master = dao.fetchUser(input.getUserName());
 
 		if (null != master) {
 
@@ -44,7 +55,11 @@ public class EntriesServiceImpl implements EntriesService {
 
 	@Override
 	public List<PwdEntries> fetchRecords(Input input) {
-		UserMaster master = dao.fetchUser(input.getUsername());
+		LoggingParams logParams = new LoggingParams(input.getUserName(), AppConstants.FETCH_RECORDS,
+				"Performing Operations");
+		logger.info(LoggerMsgSequence.getMsg(logParams));
+
+		UserMaster master = dao.fetchUser(input.getUserName());
 
 		if (null != master) {
 
