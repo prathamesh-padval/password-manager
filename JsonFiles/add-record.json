@@ -1,6 +1,6 @@
 {
 	"siteName":"string",
-	"siteId":"string",
+	"siteUserName":"string",
 	"sitePwd":"string",
 	"userName":"string"
 }

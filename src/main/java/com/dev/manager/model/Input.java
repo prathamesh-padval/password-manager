@@ -8,9 +8,19 @@ public class Input {
 
 	private String siteName;
 
-	private String siteId;
+	private String siteUserName;
 
 	private String sitePwd;
+
+	private String firstName;
+
+	private String lastName;
+
+	private String emailId;
+
+	private String userPass;
+
+	private String userPin;
 
 	public String getSiteName() {
 		return siteName;
@@ -20,12 +30,12 @@ public class Input {
 		this.siteName = siteName;
 	}
 
-	public String getSiteId() {
-		return siteId;
+	public String getSiteUserName() {
+		return siteUserName;
 	}
 
-	public void setSiteId(String siteId) {
-		this.siteId = siteId;
+	public void setSiteUserName(String siteUserName) {
+		this.siteUserName = siteUserName;
 	}
 
 	public String getSitePwd() {
@@ -50,6 +60,46 @@ public class Input {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+
+	public String getUserPass() {
+		return userPass;
+	}
+
+	public void setUserPass(String userPass) {
+		this.userPass = userPass;
+	}
+
+	public String getUserPin() {
+		return userPin;
+	}
+
+	public void setUserPin(String userPin) {
+		this.userPin = userPin;
 	}
 
 }

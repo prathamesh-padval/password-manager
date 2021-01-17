@@ -24,8 +24,8 @@ public class PwdEntries {
 	@Column(name = "site_name")
 	private String siteName;
 
-	@Column(name = "site_id")
-	private String siteId;
+	@Column(name = "site_user_name")
+	private String siteUserName;
 
 	@Column(name = "site_pwd")
 	private String sitePwd;
@@ -51,12 +51,12 @@ public class PwdEntries {
 		this.siteName = siteName;
 	}
 
-	public String getSiteId() {
-		return siteId;
+	public String getSiteUserName() {
+		return siteUserName;
 	}
 
-	public void setSiteId(String siteId) {
-		this.siteId = siteId;
+	public void setSiteUserName(String siteUserName) {
+		this.siteUserName = siteUserName;
 	}
 
 	public String getSitePwd() {

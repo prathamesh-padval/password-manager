@@ -10,6 +10,8 @@ public class AppConstants {
 
 	public static final String ADD_RECORD = "ADD RECORD";
 
+	public static final String DELETE_RECORD = "DELETE RECORD";
+
 	public static final String ADD_RECORD_SUCCESS = "ADDING RECORD SUCCESSFUL";
 
 	public static final String ADD_RECORD_FAILURE = "ADDING RECORD FAILED";

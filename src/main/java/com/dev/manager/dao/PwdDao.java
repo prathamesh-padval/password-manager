@@ -7,9 +7,11 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dev.manager.entity.PinMaster;
 import com.dev.manager.entity.PwdEntries;
 import com.dev.manager.entity.UserMaster;
 import com.dev.manager.model.Input;
+import com.dev.manager.repo.PinRepo;
 import com.dev.manager.repo.PwdEntriesRepo;
 import com.dev.manager.repo.UserRepo;
 import com.dev.manager.util.AppConstants;
@@ -25,6 +27,9 @@ public class PwdDao {
 
 	@Autowired
 	PwdEntriesRepo entryRepo;
+
+	@Autowired
+	PinRepo pinRepo;
 
 	@Autowired
 	EncryptionUtil encryptor;
@@ -84,7 +89,7 @@ public class PwdDao {
 
 	}
 
-	public String registerUser(UserMaster input, String requestType) {
+	public String registerUser(UserMaster input, String requestType, String userPin) {
 		LoggingParams params = new LoggingParams(input.getUserName(), requestType, "Registering User");
 		logger.info(LoggerMsgSequence.getMsg(params));
 
@@ -94,7 +99,17 @@ public class PwdDao {
 			if (null != dbUser) {
 				params.setMsg("User added in DB");
 				logger.info(LoggerMsgSequence.getMsg(params));
+
+				params.setMsg("Adding pin in DB");
+				logger.info(LoggerMsgSequence.getMsg(params));
+
+				PinMaster pin = new PinMaster();
+				pin.setUser(dbUser);
+				pin.setUserPin(encryptor.encrypt(userPin));
+				pinRepo.save(pin);
+
 				return AppConstants.ADD_USER_SUCCESS;
+
 			} else {
 				params.setMsg("Unable to add user in DB");
 				logger.error(LoggerMsgSequence.getMsg(params));
@@ -107,6 +122,22 @@ public class PwdDao {
 
 			return null;
 		}
+	}
+
+	public PinMaster fetchPin(UserMaster user, String requestType) {
+		LoggingParams params = new LoggingParams(user.getUserName(), requestType, "Finding Record");
+		logger.info(LoggerMsgSequence.getMsg(params));
+
+		PinMaster pin = pinRepo.findByUser(user);
+
+		return pin != null ? pin : null;
+	}
+
+	public void deletePwdEntry(PwdEntries input, String requestType) {
+		LoggingParams params = new LoggingParams(input.getUser().getUserName(), requestType, "Deleting Record");
+		logger.info(LoggerMsgSequence.getMsg(params));
+
+		entryRepo.delete(input);
 	}
 
 }

@@ -10,4 +10,5 @@ public interface EntriesService {
 	String addRecord(Input input, String requestType);
 
 	List<PwdEntries> fetchRecords(Input input, String requestType);
+
 }

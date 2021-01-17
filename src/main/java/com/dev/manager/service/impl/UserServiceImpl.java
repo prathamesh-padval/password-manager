@@ -45,16 +45,21 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String register(UserMaster input, String requestType) {
+	public String register(Input input, String requestType) {
 		LoggingParams logParams = new LoggingParams(input.getUserName(), requestType, "Performing Operations");
 
 		logger.info(LoggerMsgSequence.getMsg(logParams));
 
-		input.setUserPass(encryptor.encrypt(input.getUserPass()));
-		input.setEmailId(encryptor.encrypt(input.getEmailId()));
-		input.setFirstName(encryptor.encrypt(input.getFirstName()));
-		input.setLastName(encryptor.encrypt(input.getLastName()));
+		String userPin = input.getUserPin().length() == 4 ? "00" + input.getUserPin() : input.getUserPin();
 
-		return dao.registerUser(input, requestType);
+		UserMaster master = new UserMaster();
+
+		master.setUserName(input.getUserName());
+		master.setUserPass(encryptor.encrypt(input.getUserPass()));
+		master.setEmailId(encryptor.encrypt(input.getEmailId()));
+		master.setFirstName(encryptor.encrypt(input.getFirstName()));
+		master.setLastName(encryptor.encrypt(input.getLastName()));
+
+		return dao.registerUser(master, requestType, userPin);
 	}
 }

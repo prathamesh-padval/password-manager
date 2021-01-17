@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dev.manager.entity.UserMaster;
 import com.dev.manager.model.Input;
 import com.dev.manager.service.UserService;
 import com.dev.manager.util.AppConstants;
@@ -29,7 +28,7 @@ public class UserController {
 	private static final Logger logger = LogManager.getLogger(UserController.class);
 
 	@PostMapping(value = "/register")
-	public ResponseEntity<?> register(@RequestBody UserMaster input) {
+	public ResponseEntity<?> register(@RequestBody Input input) {
 		String requestType = AppConstants.ADD_USER;
 		LoggingParams logParams = new LoggingParams(input.getUserName(), requestType, "Request Landed on Controller");
 		logger.info(LoggerMsgSequence.getMsg(logParams));
@@ -38,6 +37,7 @@ public class UserController {
 			String resp = userService.register(input, requestType);
 			return new ResponseEntity<>(resp, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error(LoggerMsgSequence.getMsg(logParams), e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

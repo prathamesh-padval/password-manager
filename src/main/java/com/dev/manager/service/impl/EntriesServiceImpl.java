@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dev.manager.dao.PwdDao;
+import com.dev.manager.entity.PinMaster;
 import com.dev.manager.entity.PwdEntries;
 import com.dev.manager.entity.UserMaster;
 import com.dev.manager.model.Input;
@@ -37,17 +38,21 @@ public class EntriesServiceImpl implements EntriesService {
 		UserMaster master = dao.fetchUser(input.getUserName(), requestType);
 
 		if (null != master) {
+			PinMaster pin = dao.fetchPin(master, requestType);
+
+			String userPin = encryptor.decrypt(pin.getUserPin());
 
 			PwdEntries entry = new PwdEntries();
 
 			entry.setUser(master);
-			entry.setSiteId(encryptor.encrypt(input.getSiteId()));
-			entry.setSiteName(encryptor.encrypt(input.getSiteName()));
-			entry.setSitePwd(encryptor.encrypt(input.getSitePwd()));
+			entry.setSiteUserName(encryptor.encryptCustom(userPin, input.getSiteUserName()));
+			entry.setSiteName(encryptor.encryptCustom(userPin, input.getSiteName()));
+			entry.setSitePwd(encryptor.encryptCustom(userPin, input.getSitePwd()));
 
 			PwdEntries dbEntry = dao.fetchEntry(entry, requestType);
 
 			if (dbEntry != null) {
+
 				logParams.setMsg("Record is present in DB, updating record");
 				logger.info(LoggerMsgSequence.getMsg(logParams));
 
@@ -74,6 +79,10 @@ public class EntriesServiceImpl implements EntriesService {
 
 		if (null != master) {
 
+			PinMaster pin = dao.fetchPin(master, requestType);
+
+			String userPin = encryptor.decrypt(pin.getUserPin());
+
 			List<PwdEntries> dbEntries = dao.fetchEntries(master, requestType);
 
 			List<PwdEntries> entries = new ArrayList<PwdEntries>();
@@ -81,9 +90,9 @@ public class EntriesServiceImpl implements EntriesService {
 			dbEntries.forEach(p -> {
 				PwdEntries entry = new PwdEntries();
 				entry.setPwdId(p.getPwdId());
-				entry.setSiteId(encryptor.decrypt(p.getSiteId()));
-				entry.setSiteName(encryptor.decrypt(p.getSiteName()));
-				entry.setSitePwd(encryptor.decrypt(p.getSitePwd()));
+				entry.setSiteUserName(encryptor.decryptCustom(userPin, p.getSiteUserName()));
+				entry.setSiteName(encryptor.decryptCustom(userPin, p.getSiteName()));
+				entry.setSitePwd(encryptor.decryptCustom(userPin, p.getSitePwd()));
 
 				entries.add(entry);
 			});
