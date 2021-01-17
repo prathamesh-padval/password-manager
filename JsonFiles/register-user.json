@@ -3,5 +3,6 @@
 	"lastName":"string",
 	"emailId":"string",
 	"userName":"string",
-	"userPass":"string"
+	"userPass":"string",
+	"userPin":"string"
 }
