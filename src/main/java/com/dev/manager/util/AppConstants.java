@@ -21,4 +21,6 @@ public class AppConstants {
 	public static final String ADD_USER_SUCCESS = "ADDING USER SUCCESSFUL";
 
 	public static final String ADD_USER_FAILURE = "ADDING USER FAILED";
+
+	public static final String UPDATE_RECORD = "UPDATE RECORD";
 }

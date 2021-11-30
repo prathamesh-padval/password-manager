@@ -101,4 +101,14 @@ public class EntriesServiceImpl implements EntriesService {
 		}
 		return null;
 	}
+
+
+	@Override
+	public String updateRecord(Input input, Integer id, String requestType) {
+		LoggingParams logParams = new LoggingParams(input.getUserName(), requestType, "Performing Operations");
+		logger.info(LoggerMsgSequence.getMsg(logParams));
+
+
+		return "IN PROGRESS";
+	}
 }

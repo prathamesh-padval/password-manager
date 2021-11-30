@@ -7,11 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.dev.manager.entity.PwdEntries;
 import com.dev.manager.model.Input;
@@ -64,6 +60,22 @@ public class PwdRecordsController {
 
 			return new ResponseEntity<>(resp, HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(LoggerMsgSequence.getMsg(logParams), e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@PutMapping(value = "/update-record")
+	public ResponseEntity<?> updateEntries(@RequestBody Input input, @RequestParam("id") Integer id ){
+		String requestType = AppConstants.UPDATE_RECORD;
+		LoggingParams logParams = new LoggingParams(input.getUserName(), requestType, "Request Landed on Controller");
+		logger.info(LoggerMsgSequence.getMsg(logParams));
+
+		try{
+			String resp = service.updateRecord(input,id,requestType);
+			return new ResponseEntity<>(resp, HttpStatus.OK);
+		}
+		catch (Exception e){
 			logger.error(LoggerMsgSequence.getMsg(logParams), e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
